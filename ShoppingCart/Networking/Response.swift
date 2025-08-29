@@ -20,7 +20,6 @@ struct Product: Codable, Identifiable {
     
     var isLiked: Bool = false
     var isSelected: Bool = true
-    var selectedItemCount: Int = 1
 }
 
 struct Rating: Codable {

@@ -6,8 +6,9 @@
 import SwiftUI
 
 struct CartTabView: View {
+    @ObservedObject var cartManager = CartManager.shared
     @State private var allSelected: Bool = true
-    @Binding var products: [Product]
+    @State private var selectedItems: [Product] = []
     @State private var showAlert = false
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -21,6 +22,9 @@ struct CartTabView: View {
                 .background(Color.gray.opacity(0.2))
             }
             checkoutButton
+        }
+        .onAppear {
+            selectedItems = cartManager.items
         }
         .alert("Thank you for your order!", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
@@ -69,20 +73,35 @@ struct CartTabView: View {
         .padding(.horizontal, 18)
     }
     
+    @ViewBuilder
     private var itemsList: some View {
-        VStack {
-            selectAllTitleView
-            rowItemView
+        if cartManager.items.isEmpty {
+            emptyCartView
+        } else {
+            VStack {
+                selectAllTitleView
+                rowItemView
+            }
+            .background(.white)
+            .cornerRadius(20, corners: [.topLeft, .topRight])
+            .padding(.top, 12)
         }
-        .background(.white)
-        .cornerRadius(20, corners: [.topLeft, .topRight])
-        .padding(.top, 12)
+    }
+    
+    private var emptyCartView: some View {
+        VStack(alignment: .center) {
+            Text("No Items in Cart \n Add some items to your cart")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(.black)
+                .multilineTextAlignment(.center)
+        }
     }
     
     private var selectAllTitleView: some View {
         HStack(alignment: .center, spacing: 16) {
             Button {
                 allSelected.toggle()
+                cartManager.toggleSelection(value: allSelected)
             } label: {
                 Image(allSelected ? .agreedCheckIconCopy : .checkboxUnselectedCopy)
                     .resizable()
@@ -117,9 +136,21 @@ struct CartTabView: View {
         .padding(.top)
     }
     
+    private var uniqueItems: [Product] {
+        var seen = Set<Int>()
+        return CartManager.shared.items.filter { product in
+            if seen.contains(product.id) {
+                return false
+            } else {
+                seen.insert(product.id)
+                return true
+            }
+        }
+    }
+    
     private var rowItemView: some View {
         VStack {
-            ForEach(products.prefix(5), id: \.id) { item in
+            ForEach(uniqueItems, id: \.id) { item in
                 create(item)
             }
             Spacer(minLength: 100)
@@ -129,11 +160,9 @@ struct CartTabView: View {
     private func create(_ item: Product) -> some View {
         HStack(alignment: .center, spacing: 16) {
             Button {
-                if let index = products.firstIndex(where: { $0.id == item.id }) {
-                    products[index].isSelected.toggle()
-                }
+                cartManager.toggleSelection(of: item)
             } label: {
-                Image(item.isSelected ? .agreedCheckIconCopy : .checkboxUnselectedCopy)
+                Image(cartManager.isSelected(id: item.id) ? .agreedCheckIconCopy : .checkboxUnselectedCopy)
                     .resizable()
                     .frame(width: 18, height: 18)
                     .foregroundStyle(.black)
@@ -158,11 +187,7 @@ struct CartTabView: View {
                     Spacer()
                     HStack(alignment: .center, spacing: 8) {
                         Button {
-                            if let index = products.firstIndex(where: { $0.id == item.id }) {
-                                if products[index].selectedItemCount > 0 {
-                                    products[index].selectedItemCount -= 1
-                                }
-                            }
+                            cartManager.remove(item)
                         } label: {
                             Image(.minusIcon)
                                 .resizable()
@@ -172,13 +197,11 @@ struct CartTabView: View {
                                 .background(.gray.opacity(0.3))
                                 .clipShape(Circle())
                         }
-                        Text("\(item.selectedItemCount)")
+                        Text("\(cartManager.count(of: item))")
                             .font(.system(size: 12, weight: .regular))
                             .foregroundStyle(.black)
                         Button {
-                            if let index = products.firstIndex(where: { $0.id == item.id }) {
-                                products[index].selectedItemCount += 1
-                            }
+                            cartManager.add(item)
                         } label: {
                             Image(systemName: "plus")
                                 .resizable()
@@ -203,6 +226,7 @@ struct CartTabView: View {
             showAlert = true
             self.sendLocalNotification(title: "Your Order Placed Successfully",
                                        body: "We Will Notify you Once Your Order is Shipped\n 📢")
+            cartManager.removeSelectedItems()
         } label: {
             Text("Checkout")
                 .font(.system(size: 14, weight: .medium))
@@ -216,6 +240,8 @@ struct CartTabView: View {
         }
         .padding(.bottom, 65)
         .padding(.horizontal)
+        .disabled(selectedItems.isEmpty || cartManager.selecetedItemsCount == 0)
+        .opacity(selectedItems.isEmpty || cartManager.selecetedItemsCount == 0 ? 0.5 : 1)
     }
 }
 

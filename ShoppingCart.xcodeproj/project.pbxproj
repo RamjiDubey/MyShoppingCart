@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		293D82E02E60E7BA00AB0D47 /* LikeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293D82DF2E60E7BA00AB0D47 /* LikeObserver.swift */; };
 		2974C6872E5E37B1001BE247 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2974C6832E5E37B1001BE247 /* Assets.xcassets */; };
 		2974C68C2E5E37C0001BE247 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2974C68B2E5E37C0001BE247 /* AppDelegate.swift */; };
 		2974C68E2E5E38C9001BE247 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2974C68D2E5E38C9001BE247 /* SceneDelegate.swift */; };
@@ -54,6 +55,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		293D82DF2E60E7BA00AB0D47 /* LikeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeObserver.swift; sourceTree = "<group>"; };
 		2974C6752E5E377A001BE247 /* ShoppingCart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingCart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2974C6832E5E37B1001BE247 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2974C68B2E5E37C0001BE247 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -113,6 +115,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		293D82DE2E60E7AE00AB0D47 /* Observers */ = {
+			isa = PBXGroup;
+			children = (
+				293D82DF2E60E7BA00AB0D47 /* LikeObserver.swift */,
+			);
+			path = Observers;
+			sourceTree = "<group>";
+		};
 		2974C66C2E5E377A001BE247 = {
 			isa = PBXGroup;
 			children = (
@@ -132,6 +142,7 @@
 		2974C6862E5E37B1001BE247 /* ShoppingCart */ = {
 			isa = PBXGroup;
 			children = (
+				293D82DE2E60E7AE00AB0D47 /* Observers */,
 				297FCEB72E5EE1AD00F13143 /* ImageView */,
 				2974C6DD2E5E53D0001BE247 /* Networking */,
 				2974C6B52E5E3F65001BE247 /* Extensions */,
@@ -365,6 +376,7 @@
 			files = (
 				297FCEB92E5EE1BA00F13143 /* ImageView.swift in Sources */,
 				298734362E6018F300BA6F06 /* CartManager.swift in Sources */,
+				293D82E02E60E7BA00AB0D47 /* LikeObserver.swift in Sources */,
 				2974C68C2E5E37C0001BE247 /* AppDelegate.swift in Sources */,
 				2974C6E82E5E5CB3001BE247 /* View + Extension.swift in Sources */,
 				297FCEC42E5F0DA100F13143 /* ProductDetailViewModel.swift in Sources */,

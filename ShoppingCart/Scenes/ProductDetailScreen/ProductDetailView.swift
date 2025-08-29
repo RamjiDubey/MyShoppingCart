@@ -7,7 +7,6 @@ import SwiftUI
 
 struct ProductDetailView: View {
     @ObservedObject private(set) var viewModel: ProductDetailViewModel
-    @State private var isLiked: Bool = false
     var body: some View {
         ZStack {
             productDetailView
@@ -35,11 +34,9 @@ struct ProductDetailView: View {
             
             Spacer()
             Button {
-                isLiked.toggle()
-                CartManager.shared.handle(item: viewModel.product, shouldAdd: isLiked)
-                HapticGenerator.generate(.heavy)
+                viewModel.likeButtonTapped()
             } label: {
-                Image(isLiked ? .likedicon : .likeicon)
+                Image(viewModel.isLiked ? .likedicon : .likeicon)
                     .resizable()
                     .frame(width: 18, height: 18)
                     .padding(10)

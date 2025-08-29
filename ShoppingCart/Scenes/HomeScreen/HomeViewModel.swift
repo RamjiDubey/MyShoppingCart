@@ -7,12 +7,26 @@ import Combine
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-    let actionEvent = PassthroughSubject<Product, Never>()
+    private var cancellables = Set<AnyCancellable>()
+    private let likeObserver: LikeObserver = LikeObserver()
+    let actionEvent = PassthroughSubject<(Product, LikeObserver), Never>()
     @Published var showErrorView: Bool = false
     @Published var products: [Product] = []
     
     init() {
+        setUpLikeObserver()
         fetchProducts()
+    }
+    
+    private func setUpLikeObserver() {
+        likeObserver.onChange
+            .sink { [weak self] product in
+                guard let self else { return }
+                if let index = self.products.firstIndex(where: { $0.id == product.id }) {
+                    self.products[index] = product
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func fetchProducts() {
@@ -33,6 +47,6 @@ final class HomeViewModel: ObservableObject {
     }
     
     func goToProductDetail(_ product: Product) {
-        actionEvent.send(product)
+        actionEvent.send((product, likeObserver))
     }
 }

@@ -20,16 +20,16 @@ final class HomeCoordinator: BaseCoordinator<Void> {
         let controller = HostingController(rootView: view)
         navigationController.setViewControllers([controller], animated: true)
         
-        viewModel.actionEvent.sink {[weak self] product in
-            self?.coordinateToProductDetail(product)
+        viewModel.actionEvent.sink {[weak self] product, likeObserver in
+            self?.coordinateToProductDetail(product, likeObserver: likeObserver)
         }
         .store(in: &subscribers)
         
         return Empty<Void, Never>(completeImmediately: false).eraseToAnyPublisher()
     }
     
-    private func coordinateToProductDetail(_ product: Product) {
-        let coordinator = ProductDetailCoordinator(navigationController: navigationController, product: product)
+    private func coordinateToProductDetail(_ product: Product, likeObserver: LikeObserver) {
+        let coordinator = ProductDetailCoordinator(navigationController: navigationController, product: product, likeObserver: likeObserver)
         coordinate(to: coordinator)
             .sink(receiveValue: {})
             .store(in: &subscribers)

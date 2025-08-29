@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct BottomNavTabBar: View {
-    @StateObject private var cartManager = CartManager.shared
+    @ObservedObject private var cartManager = CartManager.shared
     @Binding var selectedTab: CustomTabMenuType
     @State private var cartItems: Int = 0
     
@@ -53,7 +53,7 @@ struct BottomNavTabBar: View {
         }
         .padding(.horizontal, 16)
         .background(.white)
-        .onChange(of: cartManager.count) { newValue in
+        .onChange(of: cartManager.items.count) { newValue in
             withAnimation {
                 cartItems = newValue
             }

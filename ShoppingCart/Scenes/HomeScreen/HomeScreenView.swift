@@ -22,7 +22,7 @@ struct HomeScreenView: View {
                     CatalogTabView()
                         .tag(CustomTabMenuType.catalog)
                     
-                    CartTabView(products: $viewModel.products)
+                    CartTabView()
                         .tag(CustomTabMenuType.cart)
                     
                     FavoritesTabView()

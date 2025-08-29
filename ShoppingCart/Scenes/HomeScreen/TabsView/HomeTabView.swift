@@ -208,7 +208,6 @@ struct HomeTabView: View {
                     HapticGenerator.generate(.heavy)
                     if let index = products.firstIndex(where: { $0.id == product.id }) {
                         products[index].isLiked.toggle()
-                        CartManager.shared.handle(item: product, shouldAdd: products[index].isLiked)
                     }
                 } label: {
                     Image(product.isLiked ? .likedicon : .likeicon)
